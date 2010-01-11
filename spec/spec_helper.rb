@@ -5,12 +5,12 @@ require "sham"
 
 module Spec
   module MongoMapper
-    def configure!
-      MongoMapper.database = "machinist_mongomapper"
+    def self.configure!
+      ::MongoMapper.database = "machinist_mongomapper"
 
       Spec::Runner.configure do |config|
         config.before(:each) { Sham.reset }
-        config.after(:all)   { MongoMapper.database.collections.each { |c| c.remove } }
+        config.after(:all)   { ::MongoMapper.database.collections.each { |c| c.remove } }
       end
     end
   end

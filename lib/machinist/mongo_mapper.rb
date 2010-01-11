@@ -24,7 +24,7 @@ module Machinist
       attributes = {}
       lathe.assigned_attributes.each_pair do |attribute, value|
         association = lathe.object.class.associations[attribute]
-        if association && association.belongs_to?
+        if association && association.belongs_to? && !value.nil?
           attributes[association.foreign_key.to_sym] = value.id
         else
           attributes[attribute] = value
@@ -38,7 +38,10 @@ module Machinist
     module Document
       def make(*args, &block)
         lathe = Lathe.run(Machinist::MongoMapperAdapter, self.new, *args)
-        lathe.object.save! unless Machinist.nerfed?
+        unless Machinist.nerfed?
+          lathe.object.save!
+          lathe.object.reload
+        end
         lathe.object(&block)
       end
 

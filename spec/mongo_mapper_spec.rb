@@ -54,7 +54,7 @@ describe Machinist, "MongoMapper::Document adapter" do
     it "should save the constructed object" do
       Person.blueprint { }
       person = Person.make
-      person.should_not be_new_record
+      person.should_not be_new
     end
 
     it "should create an object through belongs_to association" do
@@ -67,6 +67,15 @@ describe Machinist, "MongoMapper::Document adapter" do
       Person.blueprint { }
       Comment.blueprint { author }
       Comment.make.author.class.should == Person
+    end
+    
+    it "should create an object through belongs_to association using a named blueprint" do
+      Post.blueprint { }
+      Post.blueprint(:dummy) do
+        title { 'Dummy Post' }
+      end
+      Comment.blueprint { post(:dummy) }
+      Comment.make.post.title.should == 'Dummy Post'
     end
   end
 
@@ -99,7 +108,7 @@ describe Machinist, "MongoMapper::Document adapter" do
     it "should not save the constructed object" do
       Person.blueprint { }
       person = Person.make_unsaved
-      person.should be_new_record
+      person.should be_new
     end
     
     it "should not save associated objects" do
@@ -107,7 +116,7 @@ describe Machinist, "MongoMapper::Document adapter" do
       # Post.blueprint { }
       # Comment.blueprint { post }
       # comment = Comment.make_unsaved
-      # comment.post.should be_new_record
+      # comment.post.should be_new
     end
     
     it "should save objects made within a passed-in block" do
@@ -115,8 +124,8 @@ describe Machinist, "MongoMapper::Document adapter" do
       Comment.blueprint { }
       comment = nil
       post = Post.make_unsaved { comment = Comment.make }
-      post.should be_new_record
-      comment.should_not be_new_record
+      post.should be_new
+      comment.should_not be_new
     end
   end
 
