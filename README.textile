@@ -1,16 +1,16 @@
-h1. WARNING
+h1. Machinist Mongo
 
-This repo has been discontinued. Please use "machinist_mongo":http://github.com/nmerouze/machinist_mongo now.
+It aims to replace machinist_mongomapper to provide Machinist adapters not just for MongoMapper but for all the others MongoDB ORMs too. The MongoMapper is the only one implemented yet so fork and contribute please!
 
-h1. Machinist Mongomapper
+h2. Machinist MongoMapper
 
 A "Machinist":http://github.com/notahat/machinist adapter for "MongoMapper":http://github.com/jnunemaker/mongomapper.
 
 h2. Usage
 
-Using MachinistMongomapper is simple. Just install the gem;
+Using Machinist MongoMapper is simple. Just install the gem;
 
-bc. gem install machinist_mongomapper
+bc. gem install machinist_mongo
 
 And replace the first line of your @blueprints.rb@;
 
@@ -18,7 +18,7 @@ bc. require 'machinist/active_record'
 
 with this;
 
-bc. require 'machinist/mongomapper'
+bc. require 'machinist/mongo_mapper'
 
 Now you can use Machinist with your Mongo database. Have fun!
 

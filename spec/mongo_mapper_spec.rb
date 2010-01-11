@@ -1,5 +1,5 @@
 require File.dirname(__FILE__) + '/spec_helper'
-require 'machinist/mongomapper'
+require 'machinist/mongo_mapper'
 
 class Address
   include MongoMapper::EmbeddedDocument

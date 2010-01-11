@@ -5,10 +5,10 @@ require 'spec/rake/spectask'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = "machinist_mongomapper"
-    gem.summary = %Q{Machinist adapter for MongoMapper}
+    gem.name = "machinist_mongo"
+    gem.summary = %Q{Machinist adapters for MongoDB ORMs}
     gem.email = "nicolas.merouze@gmail.com"
-    gem.homepage = "http://github.com/yeastymobs/machinist_mongomapper"
+    gem.homepage = "http://github.com/nmerouze/machinist_mongo"
     gem.authors = ["Nicolas Mérouze", "Cyril Mougel"]
 
     gem.add_dependency('machinist',  '~> 1.0.4')
