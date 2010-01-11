@@ -1,5 +1,12 @@
-require 'machinist'
-require 'machinist/blueprints'
+require "machinist"
+require "machinist/blueprints"
+
+begin
+  require "mongo_mapper"
+rescue LoadError
+  puts "MongoMapper is not installed (gem install mongo_mapper)"
+  exit
+end
 
 module Machinist
   

@@ -12,7 +12,6 @@ begin
     gem.authors = ["Nicolas Mérouze", "Cyril Mougel"]
 
     gem.add_dependency('machinist',  '~> 1.0.4')
-    gem.add_dependency('mongo_mapper', '~> 0.6.1')
   end
 rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
