@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
      "Rakefile",
      "VERSION",
      "lib/machinist/mongo_mapper.rb",
+     "machinist_mongo.gemspec",
      "spec/mongo_mapper_spec.rb",
      "spec/spec_helper.rb"
   ]
