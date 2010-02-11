@@ -1,3 +1,4 @@
+require "ruby-debug"
 require "machinist"
 require "machinist/blueprints"
 
@@ -9,6 +10,17 @@ rescue LoadError
 end
 
 module Machinist
+
+  class Lathe
+    def assign_attribute(key, value)
+      assigned_attributes[key.to_sym] = value
+      if @object.respond_to? "#{key}="
+        @object.send("#{key}=", value)
+      else
+        @object[key] = value
+      end
+    end
+  end
   
   class MongoMapperAdapter
     def self.has_association?(object, attribute)

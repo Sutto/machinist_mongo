@@ -102,6 +102,20 @@ describe Machinist, "MongoMapper::Document adapter" do
       comment[:post].should be_nil
       comment[:post_id].should_not be_nil
     end
+
+    context "attribute assignment" do 
+      it "should allow assigning a value to an attribute" do
+        Post.blueprint { title "1234" }
+        post = Post.make
+        post.title.should == "1234"
+      end
+
+      it "should allow arbitrary attributes on the base model in its blueprint" do
+        Post.blueprint { foo "bar" }
+        post = Post.make
+        post.foo.should == "bar"
+      end
+    end
   end
 
   describe "make_unsaved method" do
@@ -151,6 +165,12 @@ describe Machinist, "MongoMapper::EmbeddedDocument adapter" do
         address { Address.make }
       end
       Person.make.address.should be_instance_of(Address)
+    end
+
+    it "should allow arbitrary attributes on the base model in its blueprint" do
+      Address.blueprint { foo "bar" }
+      addr = Address.make
+      addr.foo.should == "bar"
     end
   end
 
