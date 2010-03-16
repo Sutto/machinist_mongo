@@ -14,4 +14,18 @@ module Spec
       end
     end
   end
+  
+  module Mongoid
+    def self.configure!
+      ::Mongoid.configure do |config|
+        config.master = Mongo::Connection.new.db("machinist_mongoid")
+        config.allow_dynamic_fields = true
+      end
+      
+      Spec::Runner.configure do |config|
+        config.before(:each) { Sham.reset }
+        config.after(:all)   { ::Mongoid.master.collections.each { |c| c.remove } }
+      end
+    end
+  end
 end
