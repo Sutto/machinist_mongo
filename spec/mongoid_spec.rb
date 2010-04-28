@@ -9,7 +9,7 @@ class Address
   field :street
   field :zip
   field :country
-  belongs_to :person, :inverse_of => :address
+  embedded_in :person, :inverse_of => :address
 end
 
 class Person
@@ -20,7 +20,7 @@ class Person
   field :password
   field :admin, :type => Boolean, :default => false
 
-  has_one :address
+  embeds_one :address
 end
 
 class Post
@@ -59,19 +59,19 @@ describe Machinist, "Mongoid::Document adapter" do
       person.should_not be_new_record
     end
     
-    it "should create an object through belongs_to association" do
+    it "should create an object through embedded_in association" do
       Post.blueprint { }
       Comment.blueprint { post }
       Comment.make.post.class.should == Post
     end
       
-    it "should create an object through belongs_to association with a class_name attribute" do
+    it "should create an object through embedded_in association with a class_name attribute" do
       Person.blueprint { }
       Comment.blueprint { author }
       Comment.make.author.class.should == Person
     end
     
-    it "should create an object through belongs_to association using a named blueprint" do
+    it "should create an object through embedded_in association using a named blueprint" do
       Post.blueprint { }
       Post.blueprint(:dummy) do
         title { 'Dummy Post' }
@@ -95,7 +95,7 @@ describe Machinist, "Mongoid::Document adapter" do
       post[:title].should == "Test"
     end
     
-    it "should create an object through a belongs_to association, and return its id" do
+    it "should create an object through a embedded_in association, and return its id" do
       Post.blueprint { }
       Comment.blueprint { post }
       post_count = Post.count

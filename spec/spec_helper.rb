@@ -1,6 +1,6 @@
 $LOAD_PATH.unshift File.dirname(__FILE__) + "/../lib"
 require "rubygems"
-require "spec"
+require "rspec"
 require "sham"
 
 module Spec
@@ -8,7 +8,7 @@ module Spec
     def self.configure!
       ::MongoMapper.database = "machinist_mongomapper"
 
-      Spec::Runner.configure do |config|
+      Rspec.configure do |config|
         config.before(:each) { Sham.reset }
         config.after(:all)   { ::MongoMapper.database.collections.each { |c| c.remove } }
       end
@@ -22,7 +22,7 @@ module Spec
         config.allow_dynamic_fields = true
       end
       
-      Spec::Runner.configure do |config|
+      Rspec.configure do |config|
         config.before(:each) { Sham.reset }
         config.after(:all)   { ::Mongoid.master.collections.each { |c| c.remove } }
       end
