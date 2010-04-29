@@ -15,7 +15,6 @@ class Person
   include MongoMapper::Document
   
   key :name, String
-  key :type, String
   key :password, String
   key :admin, Boolean, :default => false
   key :address, Address

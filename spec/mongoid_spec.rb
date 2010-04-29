@@ -16,7 +16,6 @@ class Person
   include Mongoid::Document
   
   field :name
-  field :type
   field :password
   field :admin, :type => Boolean, :default => false
 

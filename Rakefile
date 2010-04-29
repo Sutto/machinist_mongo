@@ -11,7 +11,7 @@ begin
     gem.homepage = "http://github.com/nmerouze/machinist_mongo"
     gem.authors = ["Nicolas Mérouze", "Cyril Mougel"]
 
-    gem.add_dependency('machinist',  '~> 1.0.4')
+    gem.add_dependency('machinist',  '~> 1.0.6')
   end
 rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
