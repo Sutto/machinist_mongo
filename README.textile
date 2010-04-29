@@ -37,3 +37,4 @@ h2. Contributors
 * "Cyril Mougel":http://github.com/shingara
 * "Aubrey Holland":http://github.com/aub
 * "Jeff Kreeftmeijer":http://github.com/jeffkreeftmeijer
+* "Rodrigo Alvarez":http://github.com/Papipo
