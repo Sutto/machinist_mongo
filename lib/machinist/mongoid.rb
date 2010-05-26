@@ -12,7 +12,11 @@ module Machinist
   class Lathe
     def assign_attribute(key, value)
       assigned_attributes[key.to_sym] = value
-      @object.process(key => value)
+      if @object.respond_to?("#{key}=")
+        @object.send("#{key}=", value)
+      else
+        @object.process(key => value)
+      end
     end
   end
   
