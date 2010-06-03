@@ -1,8 +1,8 @@
 require "machinist"
 require "machinist/blueprints"
-
 begin
   require "mongo_mapper"
+  require "mongo_mapper/embedded_document"
 rescue LoadError
   puts "MongoMapper is not installed (gem install mongo_mapper)"
   exit
@@ -20,17 +20,17 @@ module Machinist
       end
     end
   end
-  
+
   class MongoMapperAdapter
     def self.has_association?(object, attribute)
       object.class.associations[attribute]
     end
-    
+
     def self.class_for_association(object, attribute)
       association = object.class.associations[attribute]
       association && association.klass
     end
-    
+
     def self.assigned_attributes_without_associations(lathe)
       attributes = {}
       lathe.assigned_attributes.each_pair do |attribute, value|
@@ -67,8 +67,9 @@ module Machinist
         Machinist::MongoMapperAdapter.assigned_attributes_without_associations(lathe)
       end
     end
-    
+
     module EmbeddedDocument
+
       def make(*args, &block)
         lathe = Lathe.run(Machinist::MongoMapperAdapter, self.new, *args)
         lathe.object(&block)
@@ -79,5 +80,6 @@ end
 
 MongoMapper::Document.append_extensions(Machinist::Blueprints::ClassMethods)
 MongoMapper::Document.append_extensions(Machinist::MongoMapperExtensions::Document)
-MongoMapper::EmbeddedDocument::ClassMethods.send(:include, Machinist::Blueprints::ClassMethods)
-MongoMapper::EmbeddedDocument::ClassMethods.send(:include, Machinist::MongoMapperExtensions::EmbeddedDocument)
+
+MongoMapper::EmbeddedDocument.append_extensions(Machinist::Blueprints::ClassMethods)
+MongoMapper::EmbeddedDocument.append_extensions(Machinist::MongoMapperExtensions::EmbeddedDocument)
