@@ -1,11 +1,11 @@
-require File.dirname(__FILE__) + "/spec_helper"
+require "spec_helper"
 require "machinist/mongo_mapper"
 
 Spec::MongoMapper.configure!
 
 class Address
   include MongoMapper::EmbeddedDocument
-  
+
   key :street, String
   key :zip, String
   key :country, String
@@ -13,7 +13,7 @@ end
 
 class Person
   include MongoMapper::Document
-  
+
   key :name, String
   key :password, String
   key :admin, Boolean, :default => false
@@ -22,26 +22,26 @@ end
 
 class Post
   include MongoMapper::Document
-  
+
   key :title, String
   key :body, String
   key :published, Boolean, :default => true
-  
+
   many :comments
 end
 
 class Comment
   include MongoMapper::Document
-  
+
   key :body, String
   key :post_id, String
   key :author_id, String
-  
+
   belongs_to :post
   belongs_to :author, :class_name => "Person"
 end
 
-describe Machinist, "MongoMapper::Document adapter" do 
+describe Machinist, "MongoMapper::Document adapter" do
 
   before(:each) do
     Person.clear_blueprints!
@@ -61,13 +61,13 @@ describe Machinist, "MongoMapper::Document adapter" do
       Comment.blueprint { post }
       Comment.make.post.class.should == Post
     end
-      
+
     it "should create an object through belongs_to association with a class_name attribute" do
       Person.blueprint { }
       Comment.blueprint { author }
       Comment.make.author.class.should == Person
     end
-    
+
     it "should create an object through belongs_to association using a named blueprint" do
       Post.blueprint { }
       Post.blueprint(:dummy) do
@@ -85,13 +85,13 @@ describe Machinist, "MongoMapper::Document adapter" do
       person = Person.plan
       Person.count.should == person_count
     end
-    
+
     it "should return a regular attribute in the hash" do
       Post.blueprint { title "Test" }
       post = Post.plan
       post[:title].should == "Test"
     end
-    
+
     it "should create an object through a belongs_to association, and return its id" do
       Post.blueprint { }
       Comment.blueprint { post }
@@ -102,7 +102,7 @@ describe Machinist, "MongoMapper::Document adapter" do
       comment[:post_id].should_not be_nil
     end
 
-    context "attribute assignment" do 
+    context "attribute assignment" do
       it "should allow assigning a value to an attribute" do
         Post.blueprint { title "1234" }
         post = Post.make

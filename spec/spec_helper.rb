@@ -8,21 +8,21 @@ module Spec
     def self.configure!
       ::MongoMapper.database = "machinist_mongomapper"
 
-      Rspec.configure do |config|
+      ::Rspec.configure do |config|
         config.before(:each) { Sham.reset }
         config.after(:all)   { ::MongoMapper.database.collections.each { |c| c.remove } }
       end
     end
   end
-  
+
   module Mongoid
     def self.configure!
       ::Mongoid.configure do |config|
         config.master = Mongo::Connection.new.db("machinist_mongoid")
         config.allow_dynamic_fields = true
       end
-      
-      Rspec.configure do |config|
+
+      ::Rspec.configure do |config|
         config.before(:each) { Sham.reset }
         config.after(:all)   { ::Mongoid.master.collections.each { |c| c.remove } }
       end

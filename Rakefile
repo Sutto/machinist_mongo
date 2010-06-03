@@ -1,6 +1,6 @@
 require 'rubygems'
 require 'rake'
-require 'spec/rake/spectask'
+require 'rspec/core/rake_task'
 
 begin
   require 'jeweler'
@@ -21,7 +21,4 @@ desc 'Default: run specs.'
 task :default => :spec
 
 desc 'Run all the specs for the machinist plugin.'
-Spec::Rake::SpecTask.new do |t|
-  t.spec_files = FileList['spec/**/*_spec.rb']
-  t.rcov = false
-end
+RSpec::Core::RakeTask.new(:spec)
