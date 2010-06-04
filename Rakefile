@@ -1,6 +1,6 @@
 require 'rubygems'
 require 'rake'
-require 'spec/rake/spectask'
+require 'rspec/core/rake_task'
 
 begin
   require 'jeweler'
@@ -12,7 +12,7 @@ begin
     gem.authors = ["Nicolas Mérouze", "Cyril Mougel"]
     gem.files = Dir["README.md", "LICENSE", "lib/**/*"]
 
-    gem.add_dependency('machinist',  '~> 1.0.4')
+    gem.add_dependency('machinist',  '~> 1.0.6')
   end
   
   Jeweler::GemcutterTasks.new
@@ -24,7 +24,4 @@ desc 'Default: run specs.'
 task :default => :spec
 
 desc 'Run all the specs for the machinist plugin.'
-Spec::Rake::SpecTask.new do |t|
-  t.spec_files = FileList['spec/**/*_spec.rb']
-  t.rcov = false
-end
+RSpec::Core::RakeTask.new(:spec)

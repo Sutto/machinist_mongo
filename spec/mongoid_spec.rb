@@ -1,47 +1,49 @@
-require "spec_helper"
-require "machinist/mongo_mapper"
+require File.dirname(__FILE__) + "/spec_helper"
+require "machinist/mongoid"
 
-Spec::MongoMapper.configure!
+Spec::Mongoid.configure!
 
 class Address
-  include MongoMapper::EmbeddedDocument
-
-  key :street, String
-  key :zip, String
-  key :country, String
+  include Mongoid::Document
+  
+  field :street
+  field :zip
+  field :country
+  embedded_in :person, :inverse_of => :address
 end
 
 class Person
-  include MongoMapper::Document
+  include Mongoid::Document
+  
+  field :name, :accessible => false
+  field :password
+  field :admin, :type => Boolean, :default => false
 
-  key :name, String
-  key :password, String
-  key :admin, Boolean, :default => false
-  key :address, Address
+  embeds_one :address
 end
 
 class Post
-  include MongoMapper::Document
-
-  key :title, String
-  key :body, String
-  key :published, Boolean, :default => true
-
-  many :comments
+  include Mongoid::Document
+  
+  field :title
+  field :body
+  field :published, :type => Boolean, :default => true
+  
+  has_many_related :comments
 end
 
 class Comment
-  include MongoMapper::Document
-
-  key :body, String
-  key :post_id, String
-  key :author_id, String
-
-  belongs_to :post
-  belongs_to :author, :class_name => "Person"
+  include Mongoid::Document
+  
+  field :body
+  field :post_id
+  field :author_id
+  
+  belongs_to_related :post
+  belongs_to_related :author, :class_name => "Person"
 end
 
-describe Machinist, "MongoMapper::Document adapter" do
+describe Machinist, "Mongoid::Document adapter" do 
 
   before(:each) do
     Person.clear_blueprints!
@@ -53,22 +55,22 @@ describe Machinist, "MongoMapper::Document adapter" do
     it "should save the constructed object" do
       Person.blueprint { }
       person = Person.make
-      person.should_not be_new
+      person.should_not be_new_record
     end
-
-    it "should create an object through belongs_to association" do
+    
+    it "should create an object through embedded_in association" do
       Post.blueprint { }
       Comment.blueprint { post }
       Comment.make.post.class.should == Post
     end
-
-    it "should create an object through belongs_to association with a class_name attribute" do
+      
+    it "should create an object through embedded_in association with a class_name attribute" do
       Person.blueprint { }
       Comment.blueprint { author }
       Comment.make.author.class.should == Person
     end
-
-    it "should create an object through belongs_to association using a named blueprint" do
+    
+    it "should create an object through embedded_in association using a named blueprint" do
       Post.blueprint { }
       Post.blueprint(:dummy) do
         title { 'Dummy Post' }
@@ -76,8 +78,15 @@ describe Machinist, "MongoMapper::Document adapter" do
       Comment.blueprint { post(:dummy) }
       Comment.make.post.title.should == 'Dummy Post'
     end
-  end
 
+    it "should be able to set attributes which are marked as inaccessible" do
+      Person.blueprint do
+        name { 'Foobar User' }
+      end
+      Person.make.name.should == 'Foobar User'
+    end
+  end
+  
   describe "plan method" do
     it "should not save the constructed object" do
       person_count = Person.count
@@ -85,14 +94,14 @@ describe Machinist, "MongoMapper::Document adapter" do
       person = Person.plan
       Person.count.should == person_count
     end
-
+    
     it "should return a regular attribute in the hash" do
       Post.blueprint { title "Test" }
       post = Post.plan
       post[:title].should == "Test"
     end
-
-    it "should create an object through a belongs_to association, and return its id" do
+    
+    it "should create an object through a embedded_in association, and return its id" do
       Post.blueprint { }
       Comment.blueprint { post }
       post_count = Post.count
@@ -102,7 +111,7 @@ describe Machinist, "MongoMapper::Document adapter" do
       comment[:post_id].should_not be_nil
     end
 
-    context "attribute assignment" do
+    context "attribute assignment" do 
       it "should allow assigning a value to an attribute" do
         Post.blueprint { title "1234" }
         post = Post.make
@@ -116,12 +125,12 @@ describe Machinist, "MongoMapper::Document adapter" do
       end
     end
   end
-
+  
   describe "make_unsaved method" do
     it "should not save the constructed object" do
       Person.blueprint { }
       person = Person.make_unsaved
-      person.should be_new
+      person.should be_new_record
     end
     
     it "should not save associated objects" do
@@ -129,7 +138,7 @@ describe Machinist, "MongoMapper::Document adapter" do
       # Post.blueprint { }
       # Comment.blueprint { post }
       # comment = Comment.make_unsaved
-      # comment.post.should be_new
+      # comment.post.should be_new_record
     end
     
     it "should save objects made within a passed-in block" do
@@ -137,21 +146,12 @@ describe Machinist, "MongoMapper::Document adapter" do
       Comment.blueprint { }
       comment = nil
       post = Post.make_unsaved { comment = Comment.make }
-      post.should be_new
-      comment.should_not be_new
+      post.should be_new_record
+      comment.should_not be_new_record
     end
   end
-
-end
-
-describe Machinist, "MongoMapper::EmbeddedDocument adapter" do 
-
-  before(:each) do
-    Person.clear_blueprints!
-    Address.clear_blueprints!
-  end
-
-  describe "make method" do
+  
+  describe "make method with embedded documents" do
     it "should construct object" do
       Address.blueprint { }
       address = Address.make
@@ -172,5 +172,5 @@ describe Machinist, "MongoMapper::EmbeddedDocument adapter" do
       addr.foo.should == "bar"
     end
   end
-
+  
 end

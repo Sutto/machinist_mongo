@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{machinist_mongo}
-  s.version = "1.0.3"
+  s.version = "1.1.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Nicolas M\303\251rouze", "Cyril Mougel"]
-  s.date = %q{2010-02-19}
+  s.date = %q{2010-03-31}
   s.email = %q{nicolas.merouze@gmail.com}
   s.extra_rdoc_files = [
     "LICENSE",
@@ -22,17 +22,20 @@ Gem::Specification.new do |s|
      "Rakefile",
      "VERSION",
      "lib/machinist/mongo_mapper.rb",
+     "lib/machinist/mongoid.rb",
      "machinist_mongo.gemspec",
      "spec/mongo_mapper_spec.rb",
+     "spec/mongoid_spec.rb",
      "spec/spec_helper.rb"
   ]
   s.homepage = %q{http://github.com/nmerouze/machinist_mongo}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.5}
+  s.rubygems_version = %q{1.3.6}
   s.summary = %q{Machinist adapters for MongoDB ORMs}
   s.test_files = [
     "spec/mongo_mapper_spec.rb",
+     "spec/mongoid_spec.rb",
      "spec/spec_helper.rb"
   ]
 
