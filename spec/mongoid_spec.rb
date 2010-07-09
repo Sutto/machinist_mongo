@@ -15,7 +15,7 @@ end
 class Person
   include Mongoid::Document
   
-  field :name
+  field :name, :accessible => false
   field :password
   field :admin, :type => Boolean, :default => false
 
@@ -77,6 +77,13 @@ describe Machinist, "Mongoid::Document adapter" do
       end
       Comment.blueprint { post(:dummy) }
       Comment.make.post.title.should == 'Dummy Post'
+    end
+
+    it "should be able to set attributes which are marked as inaccessible" do
+      Person.blueprint do
+        name { 'Foobar User' }
+      end
+      Person.make.name.should == 'Foobar User'
     end
   end
   

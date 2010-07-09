@@ -1,6 +1,7 @@
+# encoding: utf-8
 require 'rubygems'
 require 'rake'
-require 'spec/rake/spectask'
+require 'rspec/core/rake_task'
 
 begin
   require 'jeweler'
@@ -10,9 +11,12 @@ begin
     gem.email = "nicolas.merouze@gmail.com"
     gem.homepage = "http://github.com/nmerouze/machinist_mongo"
     gem.authors = ["Nicolas Mérouze", "Cyril Mougel"]
+    gem.files = Dir["README.md", "LICENSE", "lib/**/*"]
 
     gem.add_dependency('machinist',  '~> 1.0.6')
   end
+  
+  Jeweler::GemcutterTasks.new
 rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
 end
@@ -21,7 +25,4 @@ desc 'Default: run specs.'
 task :default => :spec
 
 desc 'Run all the specs for the machinist plugin.'
-Spec::Rake::SpecTask.new do |t|
-  t.spec_files = FileList['spec/**/*_spec.rb']
-  t.rcov = false
-end
+RSpec::Core::RakeTask.new(:spec)
