@@ -2,32 +2,23 @@ h1. Machinist Mongo
 
 It aims to replace "machinist_mongomapper":http://github.com/yeastymobs/machinist_mongomapper to provide "Machinist":http://github.com/notahat/machinist adapters not just for "MongoMapper":http://mongomapper.com but for all the others MongoDB ORMs too. Right now it supports "Mongoid":http://mongoid.com and "MongoMapper":http://mongomapper.com, but we aim to support _all_ "mongoDB":http://www.mongodb.org/ ORMs, so If you're using something other than MongoMapper or Mongoid, please be sure to write a adapter for it.
 
+h2. For Rails 2
+
+Current Machinist Mongo versions are only compatible with Rails 3. Use 1.x versions to use Machinist Mongo with Rails 2.
+
+h2. For Machinist 2
+
+There's a machinist2 branch if you want to use Machinist Mongo with Machinist 2. It will be merge in the master branch before the Machinist Mongo 2.0.0 final version.
+
 h2. Usage
 
 Using Machinist MongoMapper is simple. Put this in your @Gemfile@:
 
-bc. gem 'machinist_mongo'
+bc. gem 'machinist_mongo', :require => 'machinist/mongoid' # or mongo_mapper
 
 And run:
 
 bc. bundle install
-
-Or — if you’re using Rails 2.x — put this in @config/environment.rb@:
-
-bc. config.gem 'machinist_mongo'
-
-And run:
-
-bc. rake gems:install
-
-Now create your @spec/blueprints.rb@ or @test/blueprints.rb@ file as you normally would, only using "Mongoid":http://mongoid.com or "MongoMapper":http://mongomapper.com instead of ActiveRecord:
-
-bc. require 'machinist/mongo_mapper' # or mongoid
-require 'sham'
-
-Don't forget to require the new @blueprints.rb@ file in your @spec_helper@ (or @test_helper@):
-
-bc. require File.expand_path(File.dirname(__FILE__) + "/blueprints")
 
 And you're all set. Be sure read "Machinist's README":http://github.com/notahat/machinist to find out how to create your objects and get this thing running.
 
