@@ -35,7 +35,7 @@ module Machinist
       attributes = {}
       lathe.assigned_attributes.each_pair do |attribute, value|
         association = lathe.object.class.associations[attribute]
-        if association && association.belongs_to? && !value.nil?
+        if association && !value.nil?
           attributes[association.foreign_key.to_sym] = value.id
         else
           attributes[attribute] = value
@@ -47,39 +47,55 @@ module Machinist
 
   module MongoMapperExtensions
     module Document
-      def make(*args, &block)
-        lathe = Lathe.run(Machinist::MongoMapperAdapter, self.new, *args)
-        unless Machinist.nerfed?
-          lathe.object.save!
-          lathe.object.reload
+      extend ActiveSupport::Concern
+      
+      included do
+        extend Machinist::Blueprints::ClassMethods
+      end
+      
+      module ClassMethods
+        def make(*args, &block)
+          lathe = Lathe.run(Machinist::MongoMapperAdapter, self.new, *args)
+          unless Machinist.nerfed?
+            lathe.object.save!
+            lathe.object.reload
+          end
+          lathe.object(&block)
         end
-        lathe.object(&block)
-      end
 
-      def make_unsaved(*args)
-        Machinist.with_save_nerfed{ make(*args) }.tap do |object|
-          yield object if block_given?
+        def make_unsaved(*args)
+          Machinist.with_save_nerfed{ make(*args) }.tap do |object|
+            yield object if block_given?
+          end
         end
-      end
 
-      def plan(*args)
-        lathe = Lathe.run(Machinist::MongoMapperAdapter, self.new, *args)
-        Machinist::MongoMapperAdapter.assigned_attributes_without_associations(lathe)
+        def plan(*args)
+          lathe = Lathe.run(Machinist::MongoMapperAdapter, self.new, *args)
+          Machinist::MongoMapperAdapter.assigned_attributes_without_associations(lathe)
+        end  
       end
+      
+      module InstanceMethods;end
     end
 
     module EmbeddedDocument
-
-      def make(*args, &block)
-        lathe = Lathe.run(Machinist::MongoMapperAdapter, self.new, *args)
-        lathe.object(&block)
+      extend ActiveSupport::Concern
+      
+      included do
+        extend Machinist::Blueprints::ClassMethods
       end
+      
+      module ClassMethods
+        def make(*args, &block)
+          lathe = Lathe.run(Machinist::MongoMapperAdapter, self.new, *args)
+          lathe.object(&block)
+        end  
+      end
+      
+      module InstanceMethods; end
     end
   end
 end
 
-MongoMapper::Document.append_extensions(Machinist::Blueprints::ClassMethods)
-MongoMapper::Document.append_extensions(Machinist::MongoMapperExtensions::Document)
-
-MongoMapper::EmbeddedDocument.append_extensions(Machinist::Blueprints::ClassMethods)
-MongoMapper::EmbeddedDocument.append_extensions(Machinist::MongoMapperExtensions::EmbeddedDocument)
+MongoMapper::Document.plugin(Machinist::MongoMapperExtensions::Document)
+MongoMapper::EmbeddedDocument.plugin(Machinist::MongoMapperExtensions::EmbeddedDocument)
