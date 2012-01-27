@@ -74,8 +74,6 @@ module Machinist
           Machinist::MongoMapperAdapter.assigned_attributes_without_associations(lathe)
         end  
       end
-      
-      module InstanceMethods;end
     end
 
     module EmbeddedDocument
@@ -91,8 +89,6 @@ module Machinist
           lathe.object(&block)
         end  
       end
-      
-      module InstanceMethods; end
     end
   end
 end
